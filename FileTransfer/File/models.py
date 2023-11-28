@@ -18,3 +18,6 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.user}=> {self.title}'
+
+
+# admin uname trishasasikumar pw trisha

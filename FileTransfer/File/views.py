@@ -3,6 +3,9 @@ from django.views.generic.list import ListView
 from .models import User, Post
 from django.http import HttpResponse
 from django.contrib import messages
+from django.contrib.auth.hashers import make_password
+
+# admin uname trishasasikumar pw trisha
 
 # Create your views here.
 class HomePageView(ListView):
@@ -19,14 +22,14 @@ class HomePageView(ListView):
         Create account system
         '''
         user_name = request.POST['uname']
-        pwd1 = request.POST['pwd1']
+        pwd1 =request.POST['pwd1']
         pwd2 = request.POST['pwd2']
-        print(user_name)
-        print(pwd1)
-        print(pwd2)
+     
         if pwd1 == pwd2:
-            add_user = User(username=user_name, password=pwd1)
+            add_user = User.objects.create(username=user_name, password=pwd1)
+            add_user.password=make_password(pwd1)
             add_user.save()
+            
             messages.success(request, 'Account has been created successfully.')
             return redirect('home')
         else:
@@ -101,7 +104,7 @@ class LoginView(ListView):
     def post(self, request):
         user_name = request.POST['uname']
         pwd = request.POST['pwd']
-
+        
         user_exists = User.objects.filter(username=user_name, password=pwd).exists()
         if user_exists:
             request.session['user'] = user_name

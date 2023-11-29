@@ -3,7 +3,7 @@ from django.views.generic.list import ListView
 from .models import User, Post
 from django.http import HttpResponse
 from django.contrib import messages
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password,check_password
 
 # admin uname trishasasikumar pw trisha
 
@@ -105,8 +105,8 @@ class LoginView(ListView):
         user_name = request.POST['uname']
         pwd = request.POST['pwd']
         
-        user_exists = User.objects.filter(username=user_name, password=pwd).exists()
-        if user_exists:
+        user_exists = User.objects.get(username=user_name)
+        if check_password(pwd,user_exists.password):
             request.session['user'] = user_name
             messages.success(request, 'You are logged in successfully.')
             return redirect('home')
